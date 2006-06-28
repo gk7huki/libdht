@@ -1,0 +1,7 @@
+# import these variables from the parent build script
+Import('env', 'sources', 'target_name')
+
+env.Library(target=target_name, source=sources)
+
+print "targetname: " + target_name
+

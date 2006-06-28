@@ -1,0 +1,13 @@
+Some simple example programs to get an idea
+how to use the library.
+
+TODO create a scons file to build these
+
+dht_store:
+can be used to store a key/value pair to DHT.
+Example: ./dht_store test://mykey "my value"
+
+dht_find:
+can be used to retrieve a key/value pair to DHT.
+Example: ./dht_find test://mykey
+
