@@ -109,7 +109,7 @@ namespace dht {
 
 	#define _DHT_EXCEPTION_SUBCLASS(name, parent) \
 		typedef exception_class<parent>  name;\
-		typedef exception_classf<parent> name##f;
+		typedef exception_classf<parent##f> name##f;
 				
 	_DHT_EXCEPTION_CLASS(call_error)
 	_DHT_EXCEPTION_CLASS(operation_error)
