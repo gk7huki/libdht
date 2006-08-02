@@ -1,6 +1,6 @@
 #include "../exception.h"
 #include "state.h"
-#include "node.h"
+#include "client.h"
 #include "message.h"
 #include "message_search.h"
 
@@ -12,7 +12,7 @@ state::state(const char *id) : _id(id) {}
 state::~state() {}
 
 void 
-state::store(node *d,
+state::store(client *d,
                const key      &index,
                const value    &content,
                notify_handler *notify)
@@ -22,7 +22,7 @@ state::store(node *d,
 }
 
 void
-state::find(node *d,
+state::find(client *d,
             const key      &index,
             search_handler *handler)
 {
@@ -32,7 +32,7 @@ state::find(node *d,
           
 
 void
-state::notify(node *d, const message *m, notify_handler *n) {
+state::notify(client *d, const message *m, notify_handler *n) {
 	if (n) {
 		if (m->success()) {
 			ACE_DEBUG((LM_DEBUG, "kadc::notifying handler of success\n"));
@@ -45,7 +45,7 @@ state::notify(node *d, const message *m, notify_handler *n) {
 }
 
 int
-state::search_result(node *d, const message *m, notify_handler *h) {
+state::search_result(client *d, const message *m, notify_handler *h) {
 	const message_search *ms = dynamic_cast<const message_search *>(m);
 	search_handler       *sh = dynamic_cast<search_handler *>(h);
 	
@@ -63,7 +63,7 @@ state::search_result(node *d, const message *m, notify_handler *h) {
 }
 
 void
-state::search_done(node *d, const message *m, notify_handler *h) {
+state::search_done(client *d, const message *m, notify_handler *h) {
 	const message_search *ms = dynamic_cast<const message_search *>(m);
 	search_handler       *sh = dynamic_cast<search_handler *>(h);
 	

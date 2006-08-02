@@ -5,7 +5,7 @@
 #include "state_disconnecting.h"
 #include "task_store.h"
 #include "task_find.h"
-#include "node.h"
+#include "client.h"
 
 using namespace std;
 
@@ -21,38 +21,38 @@ state_connected::instance() {
 }
 
 void
-state_connected::connect(node *d, notify_handler *n) {
+state_connected::connect(client *d, notify_handler *n) {
 	throw call_error("kadc::connect already connected!");
 }
 
 void
-state_connected::disconnect(node *d, notify_handler *n) {
-	this->change_state(d, state_disconnecting::instance(), node::disconnecting);
+state_connected::disconnect(client *d, notify_handler *n) {
+	this->change_state(d, state_disconnecting::instance(), client::disconnecting);
 	state_disconnecting::instance()->prepare_disconnecting(d, n);
 }
 
 void 
-state_connected::store(node *d,
+state_connected::store(client *d,
                        const key      &index,
                        const value    &content,
                        notify_handler *n)
 {
 	// Start task that handles storeing
 	KadCcontext              *kccptr = this->kad_context(d);
-	node::message_queue_type *msg_q  = this->message_queue(d);
+	client::message_queue_type *msg_q  = this->message_queue(d);
 	task *t = new task_store(d, msg_q, kccptr, index, content, n);	
 	this->task_add(d, t);
 	if (n) this->attach_observer_messages(d, observer_info(this, n, t));
 }
 
 void 
-state_connected::find(node *d,
+state_connected::find(client *d,
                       const key      &index,
                       search_handler *handler)
 {
 	// Start task that handles searching
 	KadCcontext              *kccptr = this->kad_context(d);
-	node::message_queue_type *msg_q  = this->message_queue(d);
+	client::message_queue_type *msg_q  = this->message_queue(d);
 	task *t = new task_find(d, msg_q, kccptr, index, handler);
 	this->task_add(d, t);
 	if (handler) 
@@ -61,18 +61,18 @@ state_connected::find(node *d,
 }                      
 
 int
-state_connected::received_message(node *d, message *m, const observer_info &oi) {
+state_connected::received_message(client *d, message *m, const observer_info &oi) {
 	switch (m->type()) {
-	case node::msg_store:
+	case client::msg_store:
 		// Received when storing of value finished
 		this->notify(d, m, oi.handler());
 			// Remove this observer
 		return 1;
-	case node::msg_search_result:
+	case client::msg_search_result:
 		// Received when one result for a search is obtained
 		// The handler might request no more results to be delivered
 		return this->search_result(d, m, oi.handler());
-	case node::msg_search_done:
+	case client::msg_search_done:
 		// Received when search is finished
 		this->search_done(d, m, oi.handler());
 		// Remove this observer

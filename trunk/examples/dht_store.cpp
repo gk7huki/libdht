@@ -15,13 +15,13 @@
 #include <utility>
 #include <iostream>
 
-#include "dht/node.h"
-#include "dht/kadc/node.h"
+#include "dht/client.h"
+#include "dht/kadc/client.h"
 
 const char *opt_key   = NULL;
 const char *opt_value = NULL;
 
-dht::node *dht_node;
+dht::client *dht_client;
 
 const char *usage = 
 "Usage: dht_store key value";
@@ -37,7 +37,7 @@ public:
 	// dht::event_observer interface
 	virtual int state_changed(int state) {
 		std::cout << "DHT state changed to "
-		          << dht_node->state_str(state) << std::endl;
+		          << dht_client->state_str(state) << std::endl;
 		return 0;
 	}	
 	
@@ -60,19 +60,19 @@ public:
 void store() {
 	// Install observer to notify of different events
 	dht_handler *handler = new dht_handler;
-	dht_node->observer_attach(handler, dht::event_observer::mask_all);
+	dht_client->observer_attach(handler, dht::event_observer::mask_all);
 	
-	dht_node->connect();
+	dht_client->connect();
 
 	// Do processing until disconnected
-	while (dht_node->in_state() != dht::node::disconnected) {
-		// Also ACE's reactor can be used instead of dht_node->process()
-		dht_node->process();
+	while (dht_client->in_state() != dht::client::disconnected) {
+		// Also ACE's reactor can be used instead of dht_client->process()
+		dht_client->process();
 
 		// When state changes, process returns (might return earlier also).
 		// Check what the state is and do store if connected
-		switch (dht_node->in_state()) {
-		case dht::node::connected:
+		switch (dht_client->in_state()) {
+		case dht::client::connected:
 			if (!handler->store_started()) {
 				std::cout << "Starting store of key " << opt_key << std::endl;
 				handler->store_start();
@@ -81,20 +81,20 @@ void store() {
 				// meta data
 				dht::value store_value(opt_value);
 				store_value.meta().set(opt_key, opt_value);
-				dht_node->store(opt_key, store_value, handler);
+				dht_client->store(opt_key, store_value, handler);
 			} else if (handler->store_finished()) {
 				// When store is done, disconnect DHT
-				dht_node->disconnect();
+				dht_client->disconnect();
 			}
 		}
 	}	
-	dht_node->observer_remove(handler, dht::event_observer::mask_all);
+	dht_client->observer_remove(handler, dht::event_observer::mask_all);
 	delete handler;
 }
 
-dht::node *
+dht::client *
 dht_create() {
-	dht::node *n = new dht::kadc::node;
+	dht::client *n = new dht::kadc::client;
 	dht::name_value_map conf;
 	
 	// KadC needs initialization file
@@ -110,13 +110,13 @@ do_main(int argc, ACE_TCHAR *argv[]) {
 
 	opt_key   = argv[1];
 	opt_value = argv[2];
-	dht_node  = dht_create();
+	dht_client  = dht_create();
 		  
 	store();
 	
-	std::cout << "Destroying dht_node" << std::endl;
+	std::cout << "Destroying dht_client" << std::endl;
 	
-	delete dht_node;
+	delete dht_client;
 	
 	return 0;
 }

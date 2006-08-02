@@ -4,7 +4,7 @@
 
 #include "../exception.h"
 #include "task_store.h"
-#include "node.h"
+#include "client.h"
 #include "util.h"
 
 using namespace std;
@@ -12,8 +12,8 @@ using namespace std;
 namespace dht {
 namespace kadc {
 
-task_store::task_store(node *n,
-                       node::message_queue_type *q,
+task_store::task_store(client *n,
+                       client::message_queue_type *q,
                        KadCcontext             *kcc,
                        const key               &pkey,
                        const value             &pvalue,
@@ -37,7 +37,7 @@ task_store::task_store(node *n,
 	                pvalue.allow_hash_transform());
 	util::kadc_meta(&_meta, pvalue.meta());
 	
-	_node      = n;
+	_client      = n;
 	_msg_queue = q;
 	_kcc       = kcc;
 	_notify    = h;
@@ -50,13 +50,13 @@ int
 task_store::svc(void) {
 	ACE_TRACE("task_store::svc");
 	// Publish message and Task exit message
-	auto_ptr<message> msg_p(new message(this, node::msg_store));
-	auto_ptr<message> msg_e(new message(this, node::msg_task_exit));
+	auto_ptr<message> msg_p(new message(this, client::msg_store));
+	auto_ptr<message> msg_e(new message(this, client::msg_task_exit));
 	
 	msg_p->handler(_notify);
 	
-	size_t threads   = _node->store_threads();
-	size_t duration  = _node->store_duration();	
+	size_t threads   = _client->store_threads();
+	size_t duration  = _client->store_duration();	
 	// For some reason KadC_republish does not set the defaults,
 	// so do it manually here
 	if (threads == 0)  threads = 5;   // 5 threads by default
@@ -95,7 +95,7 @@ task_store::svc(void) {
 	
 	ACE_DEBUG((LM_DEBUG, "task_store: sending messages\n"));
 	
-	ACE_Guard<node::message_queue_type> guard_queue(*_msg_queue);	
+	ACE_Guard<client::message_queue_type> guard_queue(*_msg_queue);	
 	_msg_queue->push(msg_p.get()); msg_p.release();
 	_msg_queue->push(msg_e.get()); msg_e.release();
 	_msg_queue->signal();

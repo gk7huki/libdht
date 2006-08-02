@@ -113,6 +113,7 @@ namespace dht {
 				
 	_DHT_EXCEPTION_CLASS(call_error)
 	_DHT_EXCEPTION_CLASS(operation_error)
+	_DHT_EXCEPTION_CLASS(io_error)
 	_DHT_EXCEPTION_CLASS(unexpected_error)
 	
 }

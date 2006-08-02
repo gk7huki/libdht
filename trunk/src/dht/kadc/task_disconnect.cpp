@@ -3,7 +3,7 @@
 #include <ace/Guard_T.h>
 
 #include "task_disconnect.h"
-#include "node.h"
+#include "client.h"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ namespace dht {
 namespace kadc {
 
 task_disconnect::task_disconnect(
-	node::message_queue_type *q,
+	client::message_queue_type *q,
 	KadCcontext              *kcc) : task("disconnect")
 {
 	_msg_queue = q;
@@ -25,8 +25,8 @@ int
 task_disconnect::svc(void) {
 	ACE_TRACE("task_disconnect::svc");
 	// Disconnected message and Task exit message
-	auto_ptr<message> msg_d(new message(this, node::msg_disconnect));
-	auto_ptr<message> msg_e(new message(this, node::msg_task_exit));
+	auto_ptr<message> msg_d(new message(this, client::msg_disconnect));
+	auto_ptr<message> msg_e(new message(this, client::msg_task_exit));
 	
 	ACE_DEBUG((LM_DEBUG, "task_disconnect: calling KadC_stop\n"));
 	int kcs = KadC_stop(_kcc);
@@ -44,7 +44,7 @@ task_disconnect::svc(void) {
 	
 	ACE_DEBUG((LM_DEBUG, "task_disconnect: sending messages\n"));
 	
-	ACE_Guard<node::message_queue_type> guard_queue(*_msg_queue);	
+	ACE_Guard<client::message_queue_type> guard_queue(*_msg_queue);	
 	_msg_queue->push(msg_d.get()); msg_d.release();
 	_msg_queue->push(msg_e.get()); msg_e.release();
 	_msg_queue->signal();

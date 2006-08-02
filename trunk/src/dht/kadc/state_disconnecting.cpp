@@ -4,7 +4,7 @@
 #include "state_disconnecting.h"
 #include "state_disconnected.h"
 #include "task_disconnect.h"
-#include "node.h"
+#include "client.h"
 
 using namespace std;
 
@@ -20,24 +20,24 @@ state_disconnecting::instance() {
 }
 
 void
-state_disconnecting::connect(node *d, notify_handler *n) {
+state_disconnecting::connect(client *d, notify_handler *n) {
 	throw call_error("kadc::connect can't connect until disconnect finished!");
 }
 
 void
-state_disconnecting::disconnect(node *d, notify_handler *n) {
+state_disconnecting::disconnect(client *d, notify_handler *n) {
 	throw call_error("kadc::connect already disconnecting!");
 }
 
 void
-state_disconnecting::prepare_disconnecting(node *d, notify_handler *n,
+state_disconnecting::prepare_disconnecting(client *d, notify_handler *n,
                                            bool no_observer) {
 	if (this->running_tasks_size(d) > 0) {
 		this->quit_all_tasks(d);
 	} else {
 		// Start task that handles disconnect
 		KadCcontext              *kccptr = this->kad_context(d);
-		node::message_queue_type *msg_q  = this->message_queue(d);
+		client::message_queue_type *msg_q  = this->message_queue(d);
 		this->task_add(d, new task_disconnect(msg_q, kccptr));
 	}
 
@@ -46,19 +46,19 @@ state_disconnecting::prepare_disconnecting(node *d, notify_handler *n,
 }
 
 int
-state_disconnecting::received_message(node *d, message *m, 
+state_disconnecting::received_message(client *d, message *m, 
                                       const observer_info &oi) {
 	switch (m->type()) {
-	case node::msg_task_exit:
+	case client::msg_task_exit:
 		if (this->running_tasks_size(d) == 0) {
 			prepare_disconnecting(d, oi.handler(), true);
 		}
 		// Continue observing messages (waiting for msg_disconnect now)
 		return 0;
-	case node::msg_disconnect:
+	case client::msg_disconnect:
 		// Received when disconnect task is finished
 		this->change_state(d, state_disconnected::instance(), 
-		                   node::disconnected);
+		                   client::disconnected);
 		this->notify(d, m, oi.handler());
 		this->kadc_started(d, false);
 		

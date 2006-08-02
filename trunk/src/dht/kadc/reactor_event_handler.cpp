@@ -1,17 +1,17 @@
 #include "reactor_event_handler.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {
 
-reactor_event_handler::reactor_event_handler(node *owner_node) {
-	owner(owner_node);
+reactor_event_handler::reactor_event_handler(client *owner_client) {
+	owner(owner_client);
 }
 
 reactor_event_handler::~reactor_event_handler() {}
 
 void
-reactor_event_handler::owner(node *n) {
+reactor_event_handler::owner(client *n) {
 	_owner = n;
 }
 

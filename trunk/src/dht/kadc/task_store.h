@@ -4,13 +4,13 @@
 #include <string>
 
 #include "task.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {
 	class task_store : public task {
-		node                     *_node;		
-		node::message_queue_type *_msg_queue;
+		client                     *_client;		
+		client::message_queue_type *_msg_queue;
 		std::string     _index;
 		std::string     _value; 
 		std::string     _meta;
@@ -18,8 +18,8 @@ namespace kadc {
 		KadCcontext    *_kcc;
 		
 	public:
-		task_store(node *n,
-		           node::message_queue_type *q,
+		task_store(client *n,
+		           client::message_queue_type *q,
 		           KadCcontext             *kcc,
 		           const key   &pkey,
 		           const value &pvalue,

@@ -5,7 +5,7 @@
 #include <ace/Thread_Mutex.h>
 #include <queue>
 
-#include "../node.h"
+#include "../client.h"
 #include "reactor_event_handler.h"
 
 namespace dht {

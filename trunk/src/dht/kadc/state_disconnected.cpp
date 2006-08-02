@@ -19,16 +19,16 @@ state_disconnected::instance() {
 }
 
 void
-state_disconnected::connect(node *d, notify_handler *n)
+state_disconnected::connect(client *d, notify_handler *n)
 {
 	state_connecting::instance()->prepare_connecting(d, n);
-	this->change_state(d, state_connecting::instance(), node::connecting);
+	this->change_state(d, state_connecting::instance(), client::connecting);
 }
 
 void
-state_disconnected::disconnect(node *d, notify_handler *n) {
+state_disconnected::disconnect(client *d, notify_handler *n) {
 	if (this->kadc_started(d)) {
-		this->change_state(d, state_disconnecting::instance(), node::disconnecting);
+		this->change_state(d, state_disconnecting::instance(), client::disconnecting);
 		state_disconnecting::instance()->prepare_disconnecting(d, n);
 	} else if (n) {
 		// TODO 

@@ -10,8 +10,8 @@ namespace kadc {
 	public:
 		static state_disconnected *instance();
 		
-		virtual void connect(class node *d, notify_handler *n);
-		virtual void disconnect(node *d, notify_handler *n);
+		virtual void connect(class client *d, notify_handler *n);
+		virtual void disconnect(client *d, notify_handler *n);
 	protected:
 		state_disconnected() : state("disconnected") {}
 	};

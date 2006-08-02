@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_DHT_H_
-#define _DHT_KADC_DHT_H_
+#ifndef _DHT_KADC_CLIENT_H_
+#define _DHT_KADC_CLIENT_H_
 
 #include <utility>
 #include <algorithm>
@@ -7,7 +7,7 @@
 #include <list>
 #include <map>
 
-#include "../node.h"
+#include "../client.h"
 #include "shared_queue.h"
 #include "message.h"
 #include "observer_info.h"
@@ -27,7 +27,7 @@ namespace dht {
 namespace kadc {
 	using namespace std;
 
-	class node : public dht::node {
+	class client : public dht::client {
 	public:
 		typedef shared_queue<message *> message_queue_type;
 		friend class state;
@@ -92,8 +92,8 @@ namespace kadc {
 		const static int msg_search_done   = 5;
 		const static int msg_task_exit     = 6;
 		
-		node();
-		virtual ~node();
+		client();
+		virtual ~client();
 
 		inline const char *init_file() { return _init_file.c_str(); }
 		// inline message_queue_type &message_queue() { return _msg_queue; }
@@ -149,11 +149,14 @@ namespace kadc {
 		}
 		inline size_t store_duration() const { return _store_duration; }
 		
-
+		/// Sets the file where KadC writes its (debug) logging
+		/// By default the logging output is written to stderr.
+		/// Throws io_error exception if couldn't open the log file
+		static void logfile(const std::string &path);
 //		virtual const addr_inet_type *external_addr() = 0;		
 	};
 		
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_DHT_H_
+#endif //_DHT_KADC_CLIENT_H_
