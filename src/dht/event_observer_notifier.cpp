@@ -1,12 +1,12 @@
 #include "common.h"
 #include "event_observer_notifier.h"
 #include "exception.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 
 event_observer_notifier::event_observer_notifier() 
-  : _last_received_state(node::disconnected) 
+  : _last_received_state(client::disconnected) 
 {
 }
 

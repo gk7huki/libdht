@@ -7,18 +7,18 @@ namespace dht {
 namespace kadc {
 
 // Forward declaration
-class node;
+class client;
 
 class reactor_event_handler : public ACE_Event_Handler {
-	class node *_owner;
+	class client *_owner;
 	
 public:
-	reactor_event_handler(class node *owner_node);
+	reactor_event_handler(class client *owner_client);
 	virtual ~reactor_event_handler();
 	
-	void owner(class node *n);
+	void owner(class client *n);
 	
-	// Called when the node's message queue might have something in it.
+	// Called when the client's message queue might have something in it.
 	// Wakes up the reactor so that this class will be called again from
 	// the reactor thread.
 	void signal();

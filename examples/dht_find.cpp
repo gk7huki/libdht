@@ -13,12 +13,12 @@
 #include <utility>
 #include <iostream>
 
-#include "dht/node.h"
-#include "dht/kadc/node.h"
+#include "dht/client.h"
+#include "dht/kadc/client.h"
 
 const char *opt_key   = NULL;
 
-dht::node *dht_node;
+dht::client *dht_client;
 
 const char *usage = 
 "Usage: dht_find key";
@@ -34,7 +34,7 @@ public:
 	// dht::event_observer interface
 	virtual int state_changed(int state) {
 		std::cout << "DHT state changed to "
-		          << dht_node->state_str(state) << std::endl;
+		          << dht_client->state_str(state) << std::endl;
 		return 0;
 	}	
 	
@@ -73,36 +73,36 @@ public:
 void find() {
 	// Install observer to notify of different events
 	dht_handler *handler = new dht_handler;
-	dht_node->observer_attach(handler, dht::event_observer::mask_all);
+	dht_client->observer_attach(handler, dht::event_observer::mask_all);
 	
-	dht_node->connect();
+	dht_client->connect();
 
 	// Do processing until disconnected
-	while (dht_node->in_state() != dht::node::disconnected) {
-		// Also ACE's reactor can be used instead of dht_node->process()
-		dht_node->process();
+	while (dht_client->in_state() != dht::client::disconnected) {
+		// Also ACE's reactor can be used instead of dht_client->process()
+		dht_client->process();
 
 		// When state changes, process returns (might return earlier also).
 		// Check what the state is and do find if connected
-		switch (dht_node->in_state()) {
-		case dht::node::connected:
+		switch (dht_client->in_state()) {
+		case dht::client::connected:
 			if (!handler->find_started()) {
 				std::cout << "Starting finding key " << opt_key << std::endl;
 				handler->find_start();
-				dht_node->find(opt_key, handler);
+				dht_client->find(opt_key, handler);
 			} else if (handler->find_finished()) {
 				// When store is done, disconnect DHT
-				dht_node->disconnect();
+				dht_client->disconnect();
 			}
 		}
 	}	
-	dht_node->observer_remove(handler, dht::event_observer::mask_all);
+	dht_client->observer_remove(handler, dht::event_observer::mask_all);
 	delete handler;
 }
 
-dht::node *
+dht::client *
 dht_create() {
-	dht::node *n = new dht::kadc::node;
+	dht::client *n = new dht::kadc::client;
 	dht::name_value_map conf;
 	
 	// KadC needs initialization file
@@ -117,13 +117,13 @@ do_main(int argc, ACE_TCHAR *argv[]) {
 		throw "Invalid number of arguments";
 
 	opt_key   = argv[1];
-	dht_node  = dht_create();
+	dht_client  = dht_create();
 		  
 	find();
 	
-	std::cout << "Destroying dht_node" << std::endl;
+	std::cout << "Destroying dht_client" << std::endl;
 	
-	delete dht_node;
+	delete dht_client;
 	
 	return 0;
 }
@@ -165,7 +165,7 @@ ACE_TMAIN (int argc, ACE_TCHAR *argv[])
 
 // For now like this, maybe later should use a factory to abstract away
 // the used DHT implementation
-#include "dht/kadc/node.h"
+#include "dht/kadc/client.h"
 
 using namespace std;
 
@@ -173,7 +173,7 @@ typedef list<dht::key> find_list;
 
 find_list find_items;
 
-dht::node *dht_node;
+dht::client *dht_client;
 
 const char *usage = 
 "\nUsage: dht_find [opts] key ...\n" \
@@ -226,14 +226,14 @@ public:
 void operation_simple() {
 	// First connect
 	auto_ptr<success_counter> conn_count(new success_counter("connect"));
-	dht_node->connect(conn_count.get());
+	dht_client->connect(conn_count.get());
 	// Wait until connected
 	while (!conn_count->count()) {
-		dht_node->process();
+		dht_client->process();
 	}
 	
-	cout << "External address: " << dht_node->external_addr().get_host_addr()
-	     << ":" << dht_node->external_addr().get_port_number() << endl;
+	cout << "External address: " << dht_client->external_addr().get_host_addr()
+	     << ":" << dht_client->external_addr().get_port_number() << endl;
 	     
 	//char ch;
 	//cout << "Press enter when ready" << endl;
@@ -250,18 +250,18 @@ void operation_simple() {
 		                     find_items.size()) < 2) 
 		{
 			find_list::iterator i = find_items.begin();
-			dht_node->find(*i, find_count.get());
+			dht_client->find(*i, find_count.get());
 			find_items.pop_front();
 		}
-		dht_node->process();
+		dht_client->process();
 	}
 
 	// Then disconnect and wait until disconnect is finished
 	auto_ptr<success_counter> disconn_count(new success_counter("disconnect"));
-	dht_node->disconnect(disconn_count.get());
+	dht_client->disconnect(disconn_count.get());
 	// Wait until connected
 	while (!disconn_count->count()) {
-		dht_node->process();
+		dht_client->process();
 	}
 }
 
@@ -289,9 +289,9 @@ void parse_cmd_line_keyvalue(ACE_Get_Opt &cmd_opts)
 	}	
 }
 
-dht::node *
+dht::client *
 dht_create() {
-	dht::node *n = new dht::kadc::node;
+	dht::client *n = new dht::kadc::client;
 	dht::name_value_map conf;
 	
 	conf.set("init_file", INIT_FILE);
@@ -314,12 +314,12 @@ do_main(int argc, ACE_TCHAR *argv[]) {
 	if (find_items.size() <= 0) 
 		throw dht::exception(0, "at least one key to find must be specified");
 
-	dht_node = dht_create();
+	dht_client = dht_create();
 		  
 	operation_simple();
 
-	ACE_DEBUG((LM_DEBUG, "Destroying dht_node"));
-	delete dht_node;
+	ACE_DEBUG((LM_DEBUG, "Destroying dht_client"));
+	delete dht_client;
 
 	return 0;
 }

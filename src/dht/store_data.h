@@ -10,7 +10,7 @@ namespace dht {
 	 * Common base class to key and value types, not used by itself.
 	 * 
 	 * Same as basic_data, but has an extra parameter flag which
-	 * is used by dht::node implementations to determine if the
+	 * is used by dht::client implementations to determine if the
 	 * passed key & value must be taken literally or if a one
 	 * way hash can be performed on them to squeeze the data into
 	 * something that fits into the DHT.

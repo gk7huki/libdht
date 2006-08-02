@@ -12,17 +12,17 @@ namespace kadc {
 	public:
 		static state_disconnecting *instance();
 		
-		virtual void connect(node *d, notify_handler *n);
-		virtual void disconnect(node *d, notify_handler *n);
+		virtual void connect(client *d, notify_handler *n);
+		virtual void disconnect(client *d, notify_handler *n);
 		
 		// Observer interface
-		virtual int received_message(node *d, message *m, 
+		virtual int received_message(client *d, message *m, 
 		                             const observer_info &oi);
 	protected:
 		state_disconnecting() : state("disconnecting") {}
 		
 	public:
-		void prepare_disconnecting(node *d, notify_handler *n,
+		void prepare_disconnecting(client *d, notify_handler *n,
 		                           bool no_observer = false);
 	
 	};

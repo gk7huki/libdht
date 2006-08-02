@@ -2,12 +2,12 @@
 #define _DHT_KADC_TASK_CONNECTED_DETECT_H_
 
 #include "task.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {
 	class task_connected_detect : public task {
-		node::message_queue_type *_msg_queue;
+		client::message_queue_type *_msg_queue;
 		KadCcontext              *_kcc;
 		time_value_type           _poll_interval;
 		time_value_type           _conn_timeout;
@@ -18,9 +18,9 @@ namespace kadc {
 		time_value_type           _abs_next_info_debug;
 		time_value_type           _info_debug_interval;
 		
-		bool _has_timeouted(message *msg_c, int fwstatus, int nknodes);
+		bool _has_timeouted(message *msg_c, int fwstatus, int nkclients);
 	public:
-		task_connected_detect(node::message_queue_type *q,
+		task_connected_detect(client::message_queue_type *q,
 		                      KadCcontext             *kcc);
 		virtual ~task_connected_detect();
 		

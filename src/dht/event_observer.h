@@ -4,11 +4,11 @@
 #include "common.h"
 
 namespace dht {
-	// Forward declaration of dht node
-	class node;
+	// Forward declaration of dht client
+	class client;
 	
 	class event_observer {
-		class node *_owner;
+		class client *_owner;
 	public:
 		event_observer();
 		virtual ~event_observer();

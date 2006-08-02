@@ -2,15 +2,15 @@
 #define _DHT_KADC_TASK_DISCONNECT_H_
 
 #include "task.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {
 	class task_disconnect : public task {
-		node::message_queue_type *_msg_queue;
+		client::message_queue_type *_msg_queue;
 		KadCcontext             *_kcc;
 	public:
-		task_disconnect(node::message_queue_type *q,
+		task_disconnect(client::message_queue_type *q,
 		                KadCcontext             *kcc);
 		virtual ~task_disconnect();
 		

@@ -5,14 +5,14 @@
 
 #include "../key.h"
 #include "task.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {
 	using namespace std;
 	class task_find : public task {
-		node                     *_node;
-		node::message_queue_type *_msg_queue;
+		client                     *_client;
+		client::message_queue_type *_msg_queue;
 
 		key             _skey;		
 		string          _index;
@@ -27,8 +27,8 @@ namespace kadc {
 		const static int _max_hits = 500;
 #endif
 	public:
-		task_find(node *n,
-		          node::message_queue_type *q,
+		task_find(client *n,
+		          client::message_queue_type *q,
 		          KadCcontext             *kcc,
 		          const key               &skey,
 		          search_handler          *h);
@@ -36,6 +36,8 @@ namespace kadc {
 		virtual ~task_find();
 		
 		virtual int svc(void);
+		
+		static int hit_callback(KadCdictionary *d, void *context);
 	};
 	
 } // ns kadc

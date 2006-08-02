@@ -3,7 +3,7 @@
 #include <ace/Guard_T.h>
 
 #include "task_connected_detect.h"
-#include "node.h"
+#include "client.h"
 
 using namespace std;
 
@@ -11,7 +11,7 @@ namespace dht {
 namespace kadc {
 
 task_connected_detect::task_connected_detect(
-	node::message_queue_type *q,
+	client::message_queue_type *q,
 	KadCcontext             *kcc) : task("connected_detect")
 {
 	_msg_queue = q;
@@ -19,7 +19,7 @@ task_connected_detect::task_connected_detect(
 	
 	// 0.5 second poll interval
 	// 2m00s connection timeout
-	// 0m10s node timeout, which is started when first node is
+	// 0m10s client timeout, which is started when first node is
 	//       contacted
 	_poll_interval = time_value_type(0,  5 * 100000);
 	_conn_timeout  = time_value_type(120);
@@ -35,8 +35,8 @@ int
 task_connected_detect::svc(void) {
 	ACE_TRACE("task_connected_detect::svc");
 	// Connected message and Task exit message
-	auto_ptr<message> msg_c(new message(this, node::msg_connect));
-	auto_ptr<message> msg_e(new message(this, node::msg_task_exit));
+	auto_ptr<message> msg_c(new message(this, client::msg_connect));
+	auto_ptr<message> msg_e(new message(this, client::msg_task_exit));
 
 	ACE_DEBUG((LM_DEBUG, "task_connected_detect: polling when connected\n"));
 	ACE_Guard<task_connected_detect> guard(*this);
@@ -103,7 +103,7 @@ task_connected_detect::svc(void) {
 	
 	ACE_DEBUG((LM_DEBUG, "task_connected_detect: sending messages\n"));
 	
-	ACE_Guard<node::message_queue_type> guard_queue(*_msg_queue);	
+	ACE_Guard<client::message_queue_type> guard_queue(*_msg_queue);	
 	_msg_queue->push(msg_c.get()); msg_c.release();
 	_msg_queue->push(msg_e.get()); msg_e.release();
 	_msg_queue->signal();

@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include "../notify_handler.h"
-#include "node.h"
+#include "client.h"
 #include "observer_message.h"
 #include "task_connected_detect.h"
 #include "state_disconnected.h"
@@ -15,7 +15,7 @@ using namespace std;
 namespace dht {
 namespace kadc {
 
-node::node()	{
+client::client()	{
 	_state     = state_disconnected::instance();
 	_state_out = disconnected;
 	_kstarted  = false;
@@ -32,22 +32,22 @@ node::node()	{
 	_msg_queue.target(_rehandler);
 }
 
-node::~node()	{
-	ACE_DEBUG((LM_DEBUG, "dht::kadc::node: dtor called\n"));
+client::~client()	{
+	ACE_DEBUG((LM_DEBUG, "dht::kadc::client: dtor called\n"));
 	// Must wait/kill every thread that is spawned.
 	_wait_running_tasks();
-	ACE_DEBUG((LM_DEBUG, "dht::kadc::node: dtor deleting reactor event handler\n"));
+	ACE_DEBUG((LM_DEBUG, "dht::kadc::client: dtor deleting reactor event handler\n"));
 	delete _rehandler;
 }
 
 void
-node::init(const name_value_map &opts) {
+client::init(const name_value_map &opts) {
 	ACE_DEBUG((LM_DEBUG, "kadc::init called\n"));
 	_init_file = opts.get("init_file");
 }
 
 void
-node::deinit() {
+client::deinit() {
 	ACE_DEBUG((LM_DEBUG, "kadc::deinit called\n"));
 	// _quit_and_wait_running_tasks();
 	
@@ -65,32 +65,40 @@ node::deinit() {
 }
 
 void
-node::_wait_running_tasks() {
+client::logfile(const std::string &f) {
+	FILE *fp = KadClog_open(const_cast<char *>(f.c_str()));
+	if (fp == NULL)
+		throw io_errorf("Could not open logfile %s for writing",
+		                f.c_str());
+}
+
+void
+client::_wait_running_tasks() {
 	// TODO should use ACE_Thread_Manager to faciliate 
 	// timeout on waiting for the threads?
 	running_tasks_type::iterator i = _running_tasks.begin();
 	for (; i != _running_tasks.end(); i++) {
 		task *t = i->first;
-		ACE_DEBUG((LM_DEBUG, "dht::kadc::node: dtor waiting for thread %s\n",
+		ACE_DEBUG((LM_DEBUG, "dht::kadc::client: dtor waiting for thread %s\n",
 		          t->id()));
 		t->join();
 	}	
 }
 
 void
-node::connect(notify_handler *notify) {
+client::connect(notify_handler *notify) {
 	ACE_DEBUG((LM_DEBUG, "kadc::connect called\n"));
 	_state->connect(this, notify);
 }
 
 void
-node::disconnect(notify_handler *notify) {
+client::disconnect(notify_handler *notify) {
 	ACE_DEBUG((LM_DEBUG, "kadc::disconnect called\n"));
 	_state->disconnect(this, notify);
 }
 
 void
-node::store(const key   &index,
+client::store(const key   &index,
               const value &content,
               notify_handler *notify)
 {
@@ -99,7 +107,7 @@ node::store(const key   &index,
 }
 
 void
-node::find(const key      &index,
+client::find(const key      &index,
            search_handler *handler)
 {
 	ACE_DEBUG((LM_DEBUG, "kadc::find called\n"));
@@ -107,17 +115,17 @@ node::find(const key      &index,
 }
 
 const addr_inet_type &
-node::external_addr() {
+client::external_addr() {
 	return _ext_addr;	
 }
 
 reactor_type *
-node::reactor() {
+client::reactor() {
 	return _reactor;
 }
 
 void
-node::reactor(reactor_type *r) {
+client::reactor(reactor_type *r) {
 	if (r == NULL) {
 		throw call_error("dht::kadc::reactor NULL pointer not allowed");
 	}
@@ -125,17 +133,17 @@ node::reactor(reactor_type *r) {
 }
 
 int
-node::process(time_value_type *max_wait) {
+client::process(time_value_type *max_wait) {
 	return _reactor->handle_events(max_wait);
 }
 
 int
-node::process(time_value_type &max_wait) {
+client::process(time_value_type &max_wait) {
 	return _reactor->handle_events(max_wait);
 }
 
 int 
-node::handler_cancel(notify_handler *handler) {
+client::handler_cancel(notify_handler *handler) {
 	// Must go through the observer list and if the handler matches,
 	// set it to NULL so that it won't be called.
 	ACE_DEBUG((LM_DEBUG, "dht::kadc: handler_cancel\n"));
@@ -157,7 +165,7 @@ node::handler_cancel(notify_handler *handler) {
 }
 
 void
-node::_process_queue() {
+client::_process_queue() {
 	list<message *> rec_msgs;
 	list<message *>::iterator i;
 	
@@ -176,7 +184,7 @@ node::_process_queue() {
 }
 
 void
-node::_process_msg(message *tm) {
+client::_process_msg(message *tm) {
 	// ACE_DEBUG((LM_DEBUG, "kadc::processing message %d\n", tm->type()));
 	switch (tm->type()) {
 	case msg_connect:
@@ -231,19 +239,19 @@ node::_process_msg(message *tm) {
 }
 
 void 
-node::_change_state(state *s) { 
+client::_change_state(state *s) { 
 	ACE_DEBUG((LM_DEBUG, "kadc::change_state new state %s\n", s->id()));
 	_state = s; 
 }
 
 void 
-node::_change_state_out(int t) { 
+client::_change_state_out(int t) { 
 	_state_out = t;
 	this->observer_notifier()->state_changed(t);
 }
 
 void
-node::_task_add(task *t) {
+client::_task_add(task *t) {
 	_running_tasks[t] = t; // .push_back(t);
 	ACE_DEBUG((LM_DEBUG, "kadc::task_add running tasks size %d\n",
 	          _running_tasks.size()));
@@ -251,7 +259,7 @@ node::_task_add(task *t) {
 }
 
 void
-node::_quit_all_tasks() {
+client::_quit_all_tasks() {
 	running_tasks_type::iterator i = _running_tasks.begin();
 	for (; i != _running_tasks.end(); i++)
 		_quit_task(i->second);
@@ -260,7 +268,7 @@ node::_quit_all_tasks() {
 }
 
 void 
-node::_quit_task(task *t) {
+client::_quit_task(task *t) {
 	ACE_DEBUG((LM_DEBUG, "kadc::quit_task sending quit signal to task %s\n",
 	          t->id()));
 	t->acquire();
@@ -269,7 +277,7 @@ node::_quit_task(task *t) {
 }
 
 void
-node::_attach_observer_messages(const observer_info &oi) {
+client::_attach_observer_messages(const observer_info &oi) {
 	_msg_observers.push_back(oi);
 	ACE_DEBUG((LM_DEBUG, "kadc::attach_observer_messages number of " \
 	          "observers %d\n",
@@ -277,7 +285,7 @@ node::_attach_observer_messages(const observer_info &oi) {
 }
 
 bool
-node::_detach_observer_messages(observer_info *oi) {
+client::_detach_observer_messages(observer_info *oi) {
 	ACE_DEBUG((LM_DEBUG, "kadc::detach_observer_messages removing observer\n"));
 
 	message_obsvs_type::iterator i = _msg_observers.begin();

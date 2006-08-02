@@ -5,7 +5,7 @@
 
 #include "../name_value_map.h"
 #include "../value.h"
-#include "node.h"
+#include "client.h"
 
 namespace dht {
 namespace kadc {

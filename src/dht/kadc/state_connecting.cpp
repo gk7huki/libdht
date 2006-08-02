@@ -6,7 +6,7 @@
 #include "state_disconnected.h"
 #include "state_disconnecting.h"
 #include "task_connected_detect.h"
-#include "node.h"
+#include "client.h"
 #include "util.h"
 
 using namespace std;
@@ -23,24 +23,24 @@ state_connecting::instance() {
 }
 
 void
-state_connecting::connect(node *d, notify_handler *n) {
+state_connecting::connect(client *d, notify_handler *n) {
 	throw call_error("kadc::connect already connecting!");
 }
 
 void
-state_connecting::disconnect(node *d, notify_handler *n) {
+state_connecting::disconnect(client *d, notify_handler *n) {
 	observer_info oi(this);
 	bool found = this->detach_observer_messages(d, &oi);
 	if (found && oi.handler()) 
 		oi.handler()->failure(0, "aborted by disconnect");
 	
-	this->change_state(d, state_disconnecting::instance(), node::disconnecting);
+	this->change_state(d, state_disconnecting::instance(), client::disconnecting);
 	state_disconnecting::instance()->prepare_disconnecting(d, n);
 }
 
 void
-state_connecting::prepare_connecting(node *d, notify_handler *n) {
-	// For now always passive node
+state_connecting::prepare_connecting(client *d, notify_handler *n) {
+	// For now always passive client
 	int passive_mode = 1;
 	const char *init_file = d->init_file();
 	KadCcontext *kcc = this->kad_context(d);
@@ -56,26 +56,26 @@ state_connecting::prepare_connecting(node *d, notify_handler *n) {
 	
 	// Prepare a new task that detects when connected, and notifies
 	// the next state.
-	node::message_queue_type *msg_queue = this->message_queue(d);
+	client::message_queue_type *msg_queue = this->message_queue(d);
 	
 	this->task_add(d, new task_connected_detect(msg_queue, kcc));
 	this->attach_observer_messages(d, observer_info(this, n));
 }
 
 int
-state_connecting::received_message(node *d, message *m, 
+state_connecting::received_message(client *d, message *m, 
                                    const observer_info &oi) 
 {
-	if (m->type() != node::msg_connect) return 0;
+	if (m->type() != client::msg_connect) return 0;
 		
 	if (m->success()) {
 		addr_inet_type ext;
 		util::kadc_external_address(&ext, this->kad_context(d));
 		this->external_addr(d, ext);
-		this->change_state(d, state_connected::instance(), node::connected);
+		this->change_state(d, state_connected::instance(), client::connected);
 	} else {
 		this->change_state(d, state_disconnected::instance(), 
-		                   node::disconnected);
+		                   client::disconnected);
 	}
 	this->notify(d, m, oi.handler());
 	
