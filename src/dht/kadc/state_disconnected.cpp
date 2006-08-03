@@ -14,29 +14,29 @@ state_disconnected *state_disconnected::_instance = NULL;
 
 state_disconnected *
 state_disconnected::instance() {
-	if (!_instance) _instance = new state_disconnected;
-	return _instance;
+    if (!_instance) _instance = new state_disconnected;
+    return _instance;
 }
 
 void
 state_disconnected::connect(client *d, notify_handler *n)
 {
-	state_connecting::instance()->prepare_connecting(d, n);
-	this->change_state(d, state_connecting::instance(), client::connecting);
+    state_connecting::instance()->prepare_connecting(d, n);
+    this->change_state(d, state_connecting::instance(), client::connecting);
 }
 
 void
 state_disconnected::disconnect(client *d, notify_handler *n) {
-	if (this->kadc_started(d)) {
-		this->change_state(d, state_disconnecting::instance(), client::disconnecting);
-		state_disconnecting::instance()->prepare_disconnecting(d, n);
-	} else if (n) {
-		// TODO 
-		throw call_error(
-			"disconnect called without matching connect with " \
-			"handler: not implemented"
-		);
-	}
+    if (this->kadc_started(d)) {
+        this->change_state(d, state_disconnecting::instance(), client::disconnecting);
+        state_disconnecting::instance()->prepare_disconnecting(d, n);
+    } else if (n) {
+        // TODO 
+        throw call_error(
+            "disconnect called without matching connect with " \
+            "handler: not implemented"
+        );
+    }
 }
 
 
