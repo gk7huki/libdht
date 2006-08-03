@@ -4,7 +4,7 @@ namespace dht {
 namespace kadc {
 
 message::~message() {
-	
+    
 }
 
 } // ns kadc

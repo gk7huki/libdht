@@ -16,21 +16,21 @@
  */
 
 namespace dht {
-	typedef ACE_INET_Addr   addr_inet_type;
-	typedef ACE_Time_Value  time_value_type;
-	typedef ACE_Reactor     reactor_type;
-	
-	// various error codes, TODO
-	namespace error_code {
-		enum {
-			out_of_memory   = 1,
-			option,
-			call_error,
-			internal,
-			init,
-			user_error,
-		};
-	}
+    typedef ACE_INET_Addr   addr_inet_type;
+    typedef ACE_Time_Value  time_value_type;
+    typedef ACE_Reactor     reactor_type;
+    
+    // various error codes, TODO
+    namespace error_code {
+        enum {
+            out_of_memory   = 1,
+            option,
+            call_error,
+            internal,
+            init,
+            user_error,
+        };
+    }
 }
 
 #endif //_REUDP_COMMON_H_

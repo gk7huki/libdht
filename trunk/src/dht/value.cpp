@@ -1,6 +1,6 @@
 #include "value.h"
 
 namespace dht {
-	value::~value() {
-	}	
+    value::~value() {
+    }   
 } // ns dht

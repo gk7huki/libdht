@@ -9,12 +9,12 @@
 namespace dht {
 namespace kadc {
 
-	class observer_message {
-	public:		
-		virtual int received_message(client *, message *m, 
-		                             const observer_info &) = 0;
-	};
-	
+    class observer_message {
+    public:     
+        virtual int received_message(client *, message *m, 
+                                     const observer_info &) = 0;
+    };
+    
 } // ns kadc
 } // ns dht
 

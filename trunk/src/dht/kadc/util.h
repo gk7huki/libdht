@@ -20,5 +20,5 @@ void kadc_external_address(addr_inet_type *result, KadCcontext *pkcc);
 } // ns util
 } // ns kadc
 } // ns dht
-	
+    
 #endif //_DHT_KADC_UTIL_H_

@@ -20,6 +20,9 @@ ACE networking library is used to provide cross-platform
 support. You need it to use this library:
 http://www.cs.wustl.edu/~schmidt/ACE.html
 
+The latest version of KadC is needed to use dht::kadc implementation:
+http://kadc.sourceforge.net
+
 Arto Jalkanen
 ajalkane@gmail.com
 
