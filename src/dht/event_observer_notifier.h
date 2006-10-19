@@ -5,6 +5,8 @@
 #include <list>
 
 #include "event_observer.h"
+#include "key.h"
+#include "value.h"
 
 namespace dht {
     class event_observer_notifier {
@@ -25,7 +27,7 @@ namespace dht {
         
         // So far only state changes, TODO others too
         inline int state_changed(int state);
-        
+        inline int search_result(const key &k, const value &v);
         inline int last_received_state() const;
     };
 
@@ -41,6 +43,12 @@ namespace dht {
         _last_received_state = state;
         event_observer *o = _find_obs(event_observer::mask_state_changed);
         return (o ? o->state_changed(state) : 0);
+    }
+
+    inline int 
+    event_observer_notifier::search_result(const key &k, const value &v) {
+        event_observer *o = _find_obs(event_observer::mask_search_result);
+        return (o ? o->search_result(k, v) : 0);
     }
 
     inline int

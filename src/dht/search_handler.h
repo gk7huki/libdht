@@ -28,6 +28,9 @@ namespace dht {
          * are returned. If 0 returned, operation continues as normal.
          * Notice that if non-zero is returned, the success() and
          * failure() routines will NOT be called.
+         * 
+         * The return value from this overrides any return value
+         * that might have been returned by an observer.
          */
         virtual int found(const key &k, const value &v) = 0;
         

@@ -25,6 +25,9 @@ namespace kadc {
             return d->_message_queue();
         }
         
+        inline event_observer_notifier *observer_notifier(client *d) {
+            return d->observer_notifier();
+        }
         void task_add(client *d, task *t) {
             d->_task_add(t);
         }

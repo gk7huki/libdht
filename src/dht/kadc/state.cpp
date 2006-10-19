@@ -55,11 +55,17 @@ state::search_result(client *d, const message *m, notify_handler *h) {
     if (h && !sh) throw unexpected_errorf(
                    "search_result:COULD NOT CAST TO SEARCH HANDLER %p",
                    h);
+    const key   &k = *(ms->search_key());
+    const value &v = *(ms->result_value());
+    
+    int ret = this->observer_notifier(d)->search_result(k, v);
     if (sh) {
+        // The value returned by explicitly set handler always overrides
+        // one returned by observer.        
         ACE_DEBUG((LM_DEBUG, "kadc::notifying search handler of result\n"));
         return sh->found(*(ms->search_key()), *(ms->result_value()));
     }
-    return 0;
+    return ret;
 }
 
 void
