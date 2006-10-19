@@ -72,6 +72,11 @@ client::logfile(const std::string &f) {
                         f.c_str());
 }
 
+int
+client::write_inifile(const char *target_file) {
+    return KadC_write_inifile(&_kcc, target_file);    
+}
+
 void
 client::_wait_running_tasks() {
     // TODO should use ACE_Thread_Manager to faciliate 

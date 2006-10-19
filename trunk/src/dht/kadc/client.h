@@ -149,6 +149,11 @@ namespace kadc {
         }
         inline size_t store_duration() const { return _store_duration; }
         
+        // Writes kadc inifile back to disk with current contacts
+        // If no target_file given the original inifile is overwritten
+        // Returns 0 if success, otherwise kadc error code
+        int write_inifile(const char *target_file = NULL);
+        
         /// Sets the file where KadC writes its (debug) logging
         /// By default the logging output is written to stderr.
         /// Throws io_error exception if couldn't open the log file
