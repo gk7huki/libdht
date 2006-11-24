@@ -33,7 +33,9 @@ namespace kadc {
         friend class state;
         friend class reactor_event_handler;     
     private:
-        KadCcontext    _kcc;
+        // Mutable since KadC's functions, even non-modifying, do not
+        // specify const
+        mutable KadCcontext    _kcc;
         bool           _kstarted;
         string         _init_file;
         addr_inet_type _ext_addr;
@@ -153,6 +155,11 @@ namespace kadc {
         // If no target_file given the original inifile is overwritten
         // Returns 0 if success, otherwise kadc error code
         int write_inifile(const char *target_file = NULL);
+        
+        // Gets number of nodes that have been contacted
+        size_t contacted_nodes() const;
+        // Gets number of contacts
+        size_t contacts() const;
         
         /// Sets the file where KadC writes its (debug) logging
         /// By default the logging output is written to stderr.
