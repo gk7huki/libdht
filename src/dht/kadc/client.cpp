@@ -72,6 +72,16 @@ client::logfile(const std::string &f) {
                         f.c_str());
 }
 
+size_t 
+client::contacted_nodes() const {
+    return KadC_getnknodes(&_kcc);   
+}
+
+size_t 
+client::contacts() const {
+    return KadC_getncontacts(&_kcc);   
+}
+
 int
 client::write_inifile(const char *target_file) {
     return KadC_write_inifile(&_kcc, target_file);    
