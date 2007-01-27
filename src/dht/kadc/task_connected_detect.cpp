@@ -44,8 +44,9 @@ task_connected_detect::svc(void) {
     int last_fwstatus = 0;
     int last_nknodes  = 0;
 
-    // Set absolute timeout
+    // Set timeouts
     _abs_conn_timeout    = ACE_OS::gettimeofday() + _conn_timeout;
+    _abs_node_timeout    = time_value_type::zero;
     _abs_next_info_debug = ACE_OS::gettimeofday() + _info_debug_interval;
     // this->acquire();
     while (1) {
