@@ -77,7 +77,7 @@ task_find::svc(void) {
 
 #ifdef DHT_KADC_LOG_NODES
     ACE_DEBUG((DHT_KADC_LOG_NODES, 
-              "dht::kadc::task_find: clients %d, contacts %d\n",
+              "dht::kadc::task_find: nodes %d, contacts %d\n",
               KadC_getnknodes(_kcc),
               KadC_getncontacts(_kcc)));
 #endif

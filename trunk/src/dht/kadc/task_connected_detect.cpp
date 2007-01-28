@@ -19,11 +19,11 @@ task_connected_detect::task_connected_detect(
     
     // 0.5 second poll interval
     // 2m00s connection timeout
-    // 0m10s client timeout, which is started when first node is
+    // 0m30s client timeout, which is started when first node is
     //       contacted
     _poll_interval = time_value_type(0,  5 * 100000);
     _conn_timeout  = time_value_type(120);
-    _node_timeout  = time_value_type(10);
+    _node_timeout  = time_value_type(30);
     
     _info_debug_interval = time_value_type(10);
 }
