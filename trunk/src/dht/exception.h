@@ -17,38 +17,25 @@
 #include "common.h"
  
 namespace dht {
-    /*
-    class exception : public std::exception {
-    private:
-        const char *_str;
-        int         _code;
-    public:
-        exception(int code, const char *reason) :
-          _str(reason), _code(code) {
-        }
-        virtual ~exception() throw();
-        virtual const char *what() const throw() { return _str; }
-        virtual int         code() const { return _code; }
-    };
-    
-    class exceptionf : public dht::exception {
-    private:
-        char _str_store[256];
-        
-    public:
-        exceptionf(int code, const char *format, ...) 
-            : exception(code, format) {
-            va_list a;
-            va_start(a, format);
-            vsnprintf(_str_store, sizeof(_str_store)/sizeof(_str_store[0]), 
-                      format, a);
-            va_end(a);
-
-        }
-        virtual ~exceptionf() throw();
-        virtual const char *what() const throw() { return _str_store; }
-    };
-    */
+    /**
+     * @class exception exception.h dht/exception.h
+     * @brief Exception base class
+     * 
+     * Each exception thrown by dht library inherits
+     * from this class.
+     * 
+     * These are the possible concrete exception classes defined
+     * by DHT:
+     * 
+     * - call_error
+     * - operation_error
+     * - io_error
+     * - unexpected_error
+     *
+     * Implementations may define others derived from these or
+     * base class.
+     * 
+     */
     class exception : public std::exception {
     private:
         const char *_str;
@@ -58,6 +45,10 @@ namespace dht {
             ACE_ERROR((LM_ERROR, "dht::exception: %s\n", reason));
         }
         virtual ~exception() throw();
+
+        /**
+         * @brief Reason for the exception as NULL terminated string
+         */
         virtual const char *what() const throw() { return _str; }
     };
     

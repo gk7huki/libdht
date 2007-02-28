@@ -5,6 +5,7 @@
 
 namespace dht {
     /**
+     * @class store_data store_data.h dht/store_data.h
      * @brief Represents data that is stored to DHT
      * 
      * Common base class to key and value types, not used by itself.
@@ -25,7 +26,7 @@ namespace dht {
         inline store_data(const void *data, size_t len, bool aht);
         inline store_data(const char *str, bool aht);
         inline store_data(const std::string &str, bool aht);
-        inline store_data(const store_data &o);
+        // inline store_data(const store_data &o);
 
         virtual ~store_data();
         
@@ -37,11 +38,11 @@ namespace dht {
          */
         inline bool allow_hash_transform() const;
         /**
-         * @return  true if the data is allowed to be transformed, false if not.
+         * @param a if true, hash transformations allowed.
          */
         inline void allow_hash_transform(bool a);
         
-        inline store_data &operator=(const store_data &o);
+        // inline store_data &operator=(const store_data &o);
     };
     
     inline store_data::store_data(bool aht) : basic_data() { 
@@ -63,21 +64,23 @@ namespace dht {
         _allow_hash_transform = aht;
     }
 
+/*
     inline store_data::store_data(const store_data &o) : basic_data(o) { 
         _allow_hash_transform = o._allow_hash_transform;
     }
-
+*/
     inline bool 
     store_data::allow_hash_transform() const { return _allow_hash_transform; }
     inline void
     store_data::allow_hash_transform(bool a) { _allow_hash_transform = a; }
-    
+
+/*    
     inline store_data &store_data::operator=(const store_data &o) {
         basic_data::operator=(o);
         _allow_hash_transform = o._allow_hash_transform;
         return *this;
     }
-    
+*/    
     
 }
 

@@ -34,3 +34,6 @@ dist: clean_all
 	gzip $(DIST_BASENAME).tar
 	rm -r dist_tmp
 
+doxy:
+	cd doc; doxygen config.doxy
+	

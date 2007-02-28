@@ -27,11 +27,47 @@ namespace dht {
 namespace kadc {
     using namespace std;
 
+    /**
+     * @class client client.h dht/kadc/client.h
+     * @brief Implementation of DHT that uses KadC library
+     * 
+     * This implementation of dht::client interface uses KadC
+     * C-library under the hood. KadC provides access to
+     * eDonkey's Overnet network.
+     * 
+     * KadC uses for initialization a file that contains
+     * list of contact nodes to other possible peers. This
+     * file has to be given as options in initialization.
+     * KadC distribution has an example of the file.
+     * 
+     * A little code snippet example:
+     * 
+     * @code
+     * #include <dht/kadc/client.h>
+     * 
+     * int main() {
+     *    dht::kadc::client client
+     *    dht::name_value_map conf;
+     * 
+     *    conf.set("init_file", "kadc.ini");
+     *    client.init(conf);
+     *    do_stuff(client);
+     *    return 0;
+     * }
+     * @endcode
+     * 
+     * Overnet and KadC and therefore this implemenatation also
+     * supports metadata.
+     * 
+     * @see KadC homepage http://kadc.sourceforge.net/
+     */
     class client : public dht::client {
     public:
+        /// @cond KADC_INTERNAL
         typedef shared_queue<message *> message_queue_type;
         friend class state;
         friend class reactor_event_handler;     
+        /// @endcond
     private:
         // Mutable since KadC's functions, even non-modifying, do not
         // specify const
@@ -86,84 +122,180 @@ namespace kadc {
         void _process_queue();
         void _process_msg(message *tm);
     public:
-
+        /// @cond KADC_INTERNAL
         const static int msg_connect       = 1;
         const static int msg_disconnect    = 2;
         const static int msg_store         = 3;
         const static int msg_search_result = 4;
         const static int msg_search_done   = 5;
         const static int msg_task_exit     = 6;
+        /// @endcond
         
         client();
         virtual ~client();
 
+        /**
+         * @brief returns KadC's initialisation file path
+         */
         inline const char *init_file() { return _init_file.c_str(); }
-        // inline message_queue_type &message_queue() { return _msg_queue; }
-
-        // virtual state_type in_state() { return _state_out; };
         
+        /**
+         * @brief Initialisation of KadC
+         * 
+         * Supported keys in dht::kadc::client:
+         * - init_file
+         */
         virtual void init(const name_value_map &opts);
+        
+        /**
+         * @brief Deinitialises
+         * 
+         * Since KadC's deinitialisation can take several seconds,
+         * it is not done in destructor as deleting instance
+         * should be as fast as possible. This function can
+         * be called instead. The function returns only after
+         * deinitialisation has been done.
+         * 
+         * Note that if you call disconnect and wait until state
+         * changes to disconnected, deinitialisation of KadC
+         * will be done at the same time. Disconnecting is
+         * the recommended way.
+         * 
+         * @see disconnect()
+         */
         virtual void deinit();
         
-        virtual void connect(notify_handler    *notify = NULL);
-        virtual void disconnect(notify_handler *notify = NULL);
+        virtual void connect(dht::notify_handler    *handler = NULL);
+        virtual void disconnect(dht::notify_handler *handler = NULL);
         
-        virtual void find(const key      &index,
-                          search_handler *handler);
+        virtual void find(const dht::key      &fkey,
+                          dht::search_handler *handler);
 
-        virtual void store(const key      &index,
-                           const value    &content,
-                           notify_handler *notify = NULL);
+        virtual void store(const dht::key      &skey,
+                           const dht::value    &svalue,
+                           dht::notify_handler *handler = NULL);
 
         virtual const addr_inet_type &external_addr();
 
         virtual int process(time_value_type &max_wait);
         virtual int process(time_value_type *max_wait = NULL);
         virtual reactor_type *reactor();
-        virtual void          reactor(reactor_type *);
+        virtual void          reactor(reactor_type *reactor);
         virtual int handler_cancel(notify_handler *handler);
 
-        // Some function to set/get KadC specific parameters
-        // 0 value uses the default parameter on all of these.
+        /**
+         * @brief Sets number of threads used for find operations
+         * @param t number of threads to use or 0 for KadC default
+         * 
+         * KadC is thread based. With this parameter you can
+         * set how many threads are used when a find operation
+         * is done.
+         */
         inline size_t find_threads(size_t t) { 
             return _find_threads = std::min<size_t>(t, 20); 
         }
+        /**
+         * @brief Gets number of threads used for find operations
+         * 
+         * Can be 0 for default value.
+         */
         inline size_t find_threads() const { return _find_threads; }
 
-        inline size_t find_duration(size_t t) {
-            return _find_duration = std::min<size_t>(t, 200);
+        /**
+         * @brief Sets the duration of find operation in seconds
+         * @param s number of seconds or 0 for KadC default
+         */
+        inline size_t find_duration(size_t s) {
+            return _find_duration = std::min<size_t>(s, 200);
         }
+        /**
+         * @brief Gets the duration of find operation in seconds
+         * 
+         * Can be 0 if KadC default used.
+         */
         inline size_t find_duration() const { return _find_duration; }
 
+        /// @cond KADC_DEPRECATED
         inline size_t find_max_hits(size_t t) {
             return _find_max_hits = std::min<size_t>(t, 20);
         }
         
         inline size_t find_max_hits() const { return _find_max_hits; }
+        /// @endcond
 
+        /**
+         * @brief Sets number of threads used for store operations
+         * @param t number of threads to use or 0 for KadC default
+         * 
+         * KadC is thread based. With this parameter you can
+         * set how many threads are used when a store operation
+         * is done.
+         */
         inline size_t store_threads(size_t t) {
             return _store_threads = std::min<size_t>(t, 20);
         }
+        /**
+         * @brief Gets number of threads used for store operations
+         * 
+         * Can be 0 for default value.
+         */
         inline size_t store_threads() const { return _store_threads; }
 
-        inline size_t store_duration(size_t t) {
-            return _store_duration = std::min<size_t>(t, 200);
+        /**
+         * @brief Sets the duration of store operation in seconds
+         * @param s number of seconds or 0 for KadC default
+         */
+        inline size_t store_duration(size_t s) {
+            return _store_duration = std::min<size_t>(s, 200);
         }
+        /**
+         * @brief Gets the duration of store operation in seconds
+         * 
+         * Can be 0 if KadC default used.
+         */
         inline size_t store_duration() const { return _store_duration; }
         
-        // Writes kadc inifile back to disk with current contacts
-        // If no target_file given the original inifile is overwritten
-        // Returns 0 if success, otherwise kadc error code
+        /**
+         * @brief Writes KadC's initialization file to disk
+         * @param target_file Path to file or if not specified/NULL 
+         *                    then the one that was used for 
+         *                    initialization
+         * @return 0 if success, otherwise KadC error code
+         * 
+         * KadC keeps a list of contact nodes that has to be fed to
+         * the implementatino during startup (using init() function).
+         * This list of contact nodes is updated during operation
+         * so that the list is kept up-to-date with fresh contacts
+         * and non-responsive contacts are removed.
+         * 
+         * When disconnected or deinitializing this list is written
+         * back to disk. In case the current list is wanted to be
+         * saved in middle of operation, this function can be called.
+         */
         int write_inifile(const char *target_file = NULL);
-        
-        // Gets number of nodes that have been contacted
+
+        /**
+         * @brief returns number of nodes that have been contacted successfully
+         */        
         size_t contacted_nodes() const;
-        // Gets number of contacts
+        /**
+         * @brief returns total number of contacts
+         */        
         size_t contacts() const;
-        
-        /// Sets the file where KadC writes its (debug) logging
-        /// By default the logging output is written to stderr.
-        /// Throws io_error exception if couldn't open the log file
+
+        /**
+         * @brief Sets KadC log file location
+         * @param path path to the log file
+         * @exception io_error thrown if the log file specified 
+         *            couldn't be opened for writing
+         * 
+         * By default KadC logging is written to STDERR. If you
+         * call this function with a valid path then the log
+         * is written to the file specified.
+         * 
+         * This is a static function and thus affects all KadC
+         * instances.
+         */
         static void logfile(const std::string &path);
 //      virtual const addr_inet_type *external_addr() = 0;      
     };

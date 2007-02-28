@@ -5,6 +5,7 @@
 
 namespace dht {
     /**
+     * @class key key.h dht/key.h
      * @brief A DHT key
      * 
      * Represents a key that is used to index a value in DHT.
@@ -17,10 +18,31 @@ namespace dht {
      */
     class key : public store_data {
     public:
+        /**
+         * @brief default constructor
+         * 
+         * Constructs an empty key.
+         */
         inline key();
         // inline key(bool aht); //  = true);
+        /**
+         * @brief constructs key from data
+         * @param data  pointer to data
+         * @param len   data length
+         * @param aht   if true a one way hash to the data is allowed
+         */
         inline key(const void *data, size_t len, bool aht = true);
+        /**
+         * @brief constructs key from C-string
+         * @param str   NULL terminated string
+         * @param aht   if true a one way hash to the data is allowed
+         */
         inline key(const char   *str, bool aht = true);
+        /**
+         * @brief constructs key from string
+         * @param str   string
+         * @param aht   if true a one way hash to the data is allowed
+         */
         inline key(const std::string &str, bool aht = true);
         virtual ~key();
     };

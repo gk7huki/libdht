@@ -7,10 +7,11 @@
 
 namespace dht {
     /**
+     * @class search_handler search_handler.h dht/search_handler.h
      * @brief Interface for handling DHT search results.
      * 
      * Classes that implement this interface can receive and react to
-     * notifications from DHT implementations.
+     * search result notifications from DHT implementations.
      */
     
     class search_handler : public notify_handler {
@@ -32,7 +33,7 @@ namespace dht {
          * The return value from this overrides any return value
          * that might have been returned by an observer.
          */
-        virtual int found(const key &k, const value &v) = 0;
+        virtual int found(const dht::key &k, const dht::value &v) = 0;
         
         /**
          * @brief  Called if search finished successfully
@@ -41,7 +42,7 @@ namespace dht {
          * Note that even if no results were found for the key,
          * success will be called unless an abnormal error happened.
          */
-        virtual void success(const key &) { success(); }
+        virtual void success(const dht::key &k);
 
         /**
          * @brief Called if search terminated because of an error
@@ -50,12 +51,11 @@ namespace dht {
          * @param errstr a NULL terminated string giving exact reason for
          *               the error
          */
-        virtual void failure(const key &, 
-                             int error, const char *errstr)
-        { failure(error, errstr); }
+        virtual void failure(const dht::key &k, 
+                             int error, const char *errstr);
         
-        virtual void success() {}
-        virtual void failure(int, const char *) {}
+        virtual void success();
+        virtual void failure(int error, const char *errstr);
     };
 }
 

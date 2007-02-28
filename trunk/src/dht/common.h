@@ -11,26 +11,14 @@
  * @file    common.h
  * @date    Apr 9, 2005
  * @author  Arto Jalkanen
- * @brief   Some common definitions for dht
+ * @brief   Some common definitions for DHT client
  *
  */
 
 namespace dht {
     typedef ACE_INET_Addr   addr_inet_type;
     typedef ACE_Time_Value  time_value_type;
-    typedef ACE_Reactor     reactor_type;
-    
-    // various error codes, TODO
-    namespace error_code {
-        enum {
-            out_of_memory   = 1,
-            option,
-            call_error,
-            internal,
-            init,
-            user_error,
-        };
-    }
+    typedef ACE_Reactor     reactor_type;    
 }
 
 #endif //_REUDP_COMMON_H_

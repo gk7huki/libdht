@@ -3,6 +3,7 @@
 
 namespace dht {
     /**
+     * @class notify_handler notify_handler.h dht/notify_handler.h
      * @brief Interface for handling success/failure notifications.
      * 
      * Classes that implement this interface can receive and react to
