@@ -7,7 +7,8 @@
 #include <string>
 
 namespace dht {
-    /**
+    /** 
+     * @class basic_data basic_data.h dht/basic_data.h
      * @brief A simple data block
      * 
      * This class encapsulates a simple data block which may contain
@@ -43,13 +44,8 @@ namespace dht {
          * Copies the string data
          */
         inline basic_data(const char *str);
-        /**
-         * @brief Copy constructor
-         * @param o  object to initialize from
-         *
-         * Copies the data
-         */
-        inline basic_data(const basic_data &o);
+
+        // inline basic_data(const basic_data &o);
 
         /**
          * @brief Destructor
@@ -97,7 +93,7 @@ namespace dht {
          */
         inline size_t size() const;             
 
-        inline basic_data &operator=(const basic_data &o);
+        // inline basic_data &operator=(const basic_data &o);
 
     };
 
@@ -106,10 +102,10 @@ namespace dht {
         set((const char *)data, len); }
     inline basic_data::basic_data(const std::string &str)         { set(str); }
     inline basic_data::basic_data(const char   *str)         { set(str); }
-    inline basic_data::basic_data(const basic_data &o)       { 
+/*    inline basic_data::basic_data(const basic_data &o)       { 
         _data = o._data;
     }
-    
+*/    
     inline void basic_data::set(const void *data, size_t len) {
         _data.assign((const char *)data, len);
     }
@@ -131,10 +127,11 @@ namespace dht {
         return _data.size();
     }   
 
+/*
     inline basic_data &basic_data::operator=(const basic_data &o) {     
         _data = o._data;
         return *this;
-    }
+    } */
 
 } // ns dht
 #endif // _DHT_BASIC_DATA_H_

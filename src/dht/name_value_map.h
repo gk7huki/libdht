@@ -7,6 +7,7 @@
 
 namespace dht {
     /**
+     * @class name_value_map name_value_map.h dht/name_value_map.h
      * @brief Contains name/value pairs of strings
      * 
      * A simple class wrapping a number of name/value pairs
@@ -27,7 +28,6 @@ namespace dht {
         container_type _str_map;
     public:
         name_value_map();
-        name_value_map(const name_value_map &o);
         
         /**
          * @brief Destructor

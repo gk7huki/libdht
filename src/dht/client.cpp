@@ -11,17 +11,17 @@ client::~client()   {
 }
 
 const char *
-client::in_state_str() {
+client::in_state_str() const {
     return state_str(in_state());
 }
 
 int 
-client::in_state() {
-    return observer_notifier()->last_received_state();
+client::in_state() const {
+    return _obs_notifier->last_received_state();
 }
 
 const char *
-client::state_str(int state) {
+client::state_str(int state) const {
     switch (in_state()) {
     case disconnected:  return "disconnected";
     case connecting:    return "connecting";

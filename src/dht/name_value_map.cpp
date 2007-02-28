@@ -5,9 +5,6 @@ using namespace std;
 namespace dht {
 
 name_value_map::name_value_map() {}
-name_value_map::name_value_map(const name_value_map &o) {
-    _str_map = o._str_map;  
-}
 
 name_value_map::~name_value_map() {}
 
