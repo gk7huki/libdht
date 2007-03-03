@@ -15,8 +15,7 @@
  * @section Introduction
  * 
  * libdht is a cross-platform C++ library providing an 
- * interface for accessing Dynamic Hash Tables (DHTs) with 
- * a unified interface.
+ * interface for accessing Dynamic Hash Tables (DHTs).
  * 
  * At the moment eDonkey's Overnet network is implemented
  * using KadC library.
@@ -31,14 +30,20 @@
  * Metadata for a key/value pair is also supported if the
  * underlying network supports it.
  * 
- * @section Installing
+ * @section Download
+ * 
+ * Go to the sourceforge project page for SVN access and
+ * releases:
+ * http://sourceforge.net/projects/libdht
+ * 
+ * @section Building
  * 
  * @subsection Dependencies
  * - ACE networking library http://www.cs.wustl.edu/~schmidt/ACE.html
  * - KadC library http://kadc.sourceforge.net
  * - SCons build system http://www.scons.org/
  * 
- * @subsection compiling
+ * @subsection Compiling
  * 
  * After compiling and installing ACE, KadC and SCons,
  * copy the file build_config.py.dist to build_config.py.
@@ -47,11 +52,12 @@
  * 
  * Compiling after that is a simple matter of issuing
  * \verbatim
-   scons
-   \endverbatim
+   scons \endverbatim
  * 
  * The library will be compiled under build directory, under
- * the corresponding architecture (eg. build/win32 or build/linux etc.)
+ * the corresponding architecture (eg. build/win32 or build/linux etc.).
+ * Compilation has been tested on win32 with MinGW and under Linux.
+ * Other platforms may need additional compilation settings.
  * 
  * @section Examples
  * 
@@ -62,7 +68,7 @@
  * and if someone comes up with a good scons file for it before that,
  * send me a patch.
  * 
- * A quite minimal example of how easy it is to use the library
+ * A quite minimal example of how to use the library
  * is the following example which tries finding values
  * for the key "ubuntu" from Overnet DHT:
  * 

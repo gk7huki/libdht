@@ -1,7 +1,8 @@
 EXAMPLE_FILES=examples/*.cpp examples/README
 DIST_TAR_EXCLUDES=--exclude='.*' --exclude=makefile --exclude='*.exe'
 DIST_BASENAME=dht
-DIST_FILES=LICENSE README Makefile SConstruct build_config.py.dist build_support.py src examples build
+DIST_FILES=LICENSE README Makefile SConstruct build_config.py.dist \
+           build_support.py src examples build doc
 
 default: release
 
@@ -9,7 +10,7 @@ clean: clean_release
 
 all: release debug
 
-clean_all: clean_release clean_debug
+clean_all: clean_release clean_debug clean_examples clean_doc
 
 release: build_release
 
@@ -27,6 +28,12 @@ clean_release:
 clean_debug:
 	scons -c debug=yes
 
+clean_examples:
+	cd examples; make clean
+
+clean_doc:
+	rm -r doc/html
+	
 dist: clean_all
 	mkdir -p dist_tmp/$(DIST_BASENAME) 
 	cp -R $(DIST_FILES) dist_tmp/$(DIST_BASENAME)
