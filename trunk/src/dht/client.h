@@ -15,7 +15,7 @@
  * @section Introduction
  * 
  * libdht is a cross-platform C++ library providing an 
- * interface for accessing Dynamic Hash Tables (DHTs).
+ * interface for accessing Distributed Hash Tables (DHTs).
  * 
  * At the moment eDonkey's Overnet network is implemented
  * using KadC library.
