@@ -1,7 +1,6 @@
 # import these variables from the parent build script
-Import('env', 'sources', 'target_name')
+Import('env', 'exe_env', 'target_name', 'target_dir')
 
-env.Library(target=target_name, source=sources)
-
-print "targetname: " + target_name
+exe_env.Append(LIBPATH=target_dir)
+exe_env.Append(LIBS=target_name)
 

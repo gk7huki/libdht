@@ -4,6 +4,7 @@
 import sys
 import os
 import fnmatch
+import re
 
 def SelectBuildDir(build_dir, platform=None):
 
@@ -66,9 +67,14 @@ def RequireFiles(files, found_files, search_path):
             i = i + 1
 
 # Like glob, but gets recursively all the files under the specified directory
-def DirGlob(dir, match):
+def DirGlob(dir, match, dir_match = None, dir_replace = None):
     match_list = []
+    if dir_replace and dir_match:
+        dir_replace_pat = re.compile('^' + dir_match)
+    	
     for root, dirs, files in os.walk(dir):
+        if dir_replace_pat:
+            root = dir_replace_pat.sub(dir_replace, root)
         for matching_file in fnmatch.filter(files, match):
             match_list.append(root + os.sep + matching_file)
 
