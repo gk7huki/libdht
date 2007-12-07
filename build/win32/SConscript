@@ -1,9 +1,11 @@
 # import these variables from the parent build script
-Import('env', 'sources', 'target_name')
+Import('env', 'exe_env', 'target_name', 'target_dir')
 
+env.Append(CPPFLAGS = "-mthreads")
 
-env.Append(CPPFLAGS = "-mthreads");
-env.Library(target=target_name, source=sources)
-
-print "targetname: " + target_name
-
+exe_env.Append(LIBPATH=target_dir)
+exe_env.Append(LIBS=target_name)
+exe_env.Append(CPPFLAGS = "-mthreads")
+exe_env.Append(
+    LIBS=['comctl32','ws2_32','winspool','mpr','m',
+          'dpnlobby','dxguid','ole32'])

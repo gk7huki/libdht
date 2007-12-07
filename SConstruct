@@ -10,6 +10,9 @@ opts = Options('custom.py')
 opts.Add(EnumOption('debug', 'Build with debug symbols', 'no',
                     ['yes','no']))
 env = Environment(options = opts, tools=['mingw'])
+Help("\nType 'scons' to build the library\n")
+Help("\nType 'scons example' to build the examples\n")
+# Help("\nType 'scons test' to build and run the unit tests\n")
 Help(opts.GenerateHelpText(env))
 
 mode = "Release"
@@ -26,17 +29,9 @@ else:
 # Construct target directories and names. Since the
 # build specific SConscript file is one level above
 # the build dir, some trickery is required.
-target_dir_base = '#' + SelectBuildDir(build_base_dir)
-target_dir      = os.sep.join([target_dir_base, mode])
-target_name     = os.sep.join([mode, target_name])
-
-## Get the sources
-sources_raw = DirGlob(source_base_dir, '*.cpp') # glob.glob(source_base_dir + os.sep + '*.cpp')
-## Now must make a pure version relative to the build directory
-## in Release/Debug (without the source_base_dir at start)
-sources = []
-for source in sources_raw:
-    sources.append(os.sep.join([target_dir] + source.split(os.sep)[1:]))
+platform_dir = '#' + SelectBuildDir(build_base_dir)
+build_dir    = os.path.join(platform_dir, mode)
+target_dir   = build_dir
 
 # setup the include paths
 env.Append(CPPPATH=include_search_path)
@@ -44,10 +39,53 @@ env.Append(LIBS=libs)
 env.Append(LIBPATH=lib_search_path)
 env.Append(CPPDEFINES=defs)
 
-# start the build
+env.BuildDir(build_dir, source_base_dir, duplicate=0)
 
-# variables the sub build directories need
-Export('env', 'sources', 'mode', 'target_name')
-env.BuildDir(target_dir, source_base_dir, duplicate=0)
-env.SConscript(target_dir_base + os.sep + 'SConscript')
+# Executable building environment needs usually some more
+# specifications such as platform specific libraries.
+exe_env = env.Clone()
+exe_env.Append(LIBS=exe_libs)
 
+# Until SCons gets its own SCons.Glob function, we will
+# have to do some trickery to get all the compiled files.
+# Calling BuildDir requires the source files to be
+# specified as if they were in the build directory.
+# So glob the files from the real sources but replacing
+# the start with the target dir.
+# Once scons has its Glob this trickery can be
+# probably removed and selection of files moved
+# to the src/SConscript file.
+lib_sources = example_sources = test_sources = []
+lib_sources = DirGlob(dir         = lib_source_dir, 
+                      match       = '*.cpp', 
+                      dir_match   = source_base_dir,
+                      dir_replace = build_dir)
+
+env_exports = ['env', 'exe_env', 'lib_sources', 
+              'target_name', 'target_dir',
+              'example_sources',
+              'test_sources', 'test_libs']
+
+if 'test' in BUILD_TARGETS:
+    test_sources = DirGlob(dir         = test_source_dir, 
+                           match       = '*.cpp', 
+                           dir_match   = source_base_dir,
+                           dir_replace = build_dir)
+else:
+    test_sources = []
+    test_libs = []
+
+if 'example' in BUILD_TARGETS:
+    example_sources = DirGlob(dir         = example_source_dir, 
+                              match       = '*.cpp', 
+                              dir_match   = source_base_dir,
+                              dir_replace = build_dir)
+else:
+    example_sources = []
+
+Export(env_exports)
+# The first SConscripts calls platform specific
+# configurations. The second one creates 
+# configuration for building the sources.
+env.SConscript(dirs = platform_dir)
+env.SConscript(dirs = build_dir)

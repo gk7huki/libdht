@@ -1,7 +1,8 @@
 Some simple example programs to get an idea
 how to use the library.
 
-TODO create a scons file to build these
+Building:
+scons example
 
 dht_store:
 can be used to store a key/value pair to DHT.

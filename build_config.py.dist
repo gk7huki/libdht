@@ -15,7 +15,10 @@ lib_search_path = ['#../../libs/ACE_wrappers',
 ## Where we should find things to include
 include_search_path =  ['#../../libs/ACE_wrappers',
                         # For KadC:
-                        '#../../libs'
+                        '#../../libs',
+                        # This is for examples and tests to find
+                        # libraries header files
+                        '#/src'                        
                         ]
 libs = ['ACE']
 defs = ['ACE_AS_STATIC_LIBS', ('ACE_NTRACE', 1),
@@ -23,11 +26,18 @@ defs = ['ACE_AS_STATIC_LIBS', ('ACE_NTRACE', 1),
         '_REENTRANT']
 flgs = ['-Wall']
 
+# Libs that built exes need. By default only ACE and KadC, but 
+# platform specific SConstruct files might add here more
+exe_libs = ['dht', 'ACE', 'KadC']
+
 #### You should not change these.  These are only here
 #### If you want to start your own build setup with a
 #### different layout than mine.
-source_base_dir = 'src'
-build_base_dir  = 'build'
+source_base_dir     = 'src'
+lib_source_dir      = 'src/dht'
+test_source_dir     = 'src/tests'
+example_source_dir  = 'src/examples'
+build_base_dir   = 'build'
 target_name     = 'dht'
 
 
