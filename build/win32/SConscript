@@ -7,5 +7,4 @@ exe_env.Append(LIBPATH=target_dir)
 exe_env.Append(LIBS=target_name)
 exe_env.Append(CPPFLAGS = "-mthreads")
 exe_env.Append(
-    LIBS=['comctl32','ws2_32','winspool','mpr','m',
-          'dpnlobby','dxguid','ole32'])
+    LIBS=['ws2_32','pthreadGC','z'])
