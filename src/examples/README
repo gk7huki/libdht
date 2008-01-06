@@ -4,6 +4,12 @@ how to use the library.
 Building:
 scons example
 
+When you run the examples that use KadC, you must
+run them from a directory where kadc.ini exists.
+This directory contains a kadc.ini file, but if
+the peers are out of date generate a new one
+with up-to-date peers.
+
 dht_store:
 can be used to store a key/value pair to DHT.
 Example: ./dht_store test://mykey "my value"
