@@ -8,7 +8,7 @@ default: release
 
 clean: clean_release
 
-all: release debug
+all: release
 
 clean_all: clean_release clean_debug clean_examples clean_doc
 
