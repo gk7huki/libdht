@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_STATE_DISCONNECTING_H_
-#define _DHT_KADC_STATE_DISCONNECTING_H_
+#ifndef DHT_KADC_STATE_DISCONNECTING_H_
+#define DHT_KADC_STATE_DISCONNECTING_H_
 
 #include "state.h"
 #include "observer_message.h"

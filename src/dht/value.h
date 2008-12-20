@@ -1,5 +1,5 @@
-#ifndef _DHT_VALUE_H_
-#define _DHT_VALUE_H_
+#ifndef DHT_VALUE_H_
+#define DHT_VALUE_H_
 
 #include "store_data.h"
 #include "name_value_map.h"
@@ -89,4 +89,4 @@ namespace dht {
         
 } // ns dht
 
-#endif //_DHT_VALUE_H_
+#endif //DHT_VALUE_H_

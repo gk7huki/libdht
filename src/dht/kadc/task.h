@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_TASK_H_
-#define _DHT_KADC_TASK_H_
+#ifndef DHT_KADC_TASK_H_
+#define DHT_KADC_TASK_H_
 
 #include <ace/Condition_T.h>
 #include <ace/Recursive_Thread_Mutex.h>
@@ -32,4 +32,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_TASK_H_
+#endif //DHT_KADC_TASK_H_

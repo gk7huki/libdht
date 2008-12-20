@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_UTIL_H_
-#define _DHT_KADC_UTIL_H_
+#ifndef DHT_KADC_UTIL_H_
+#define DHT_KADC_UTIL_H_
 
 #include <string>
 
@@ -21,4 +21,4 @@ void kadc_external_address(addr_inet_type *result, KadCcontext *pkcc);
 } // ns kadc
 } // ns dht
     
-#endif //_DHT_KADC_UTIL_H_
+#endif //DHT_KADC_UTIL_H_

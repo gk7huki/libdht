@@ -1,5 +1,5 @@
-#ifndef _DHT_EXCEPTION_H_
-#define _DHT_EXCEPTION_H_
+#ifndef DHT_EXCEPTION_H_
+#define DHT_EXCEPTION_H_
 /**
  * @file    exception.h
  * @date    Apr 9, 2005
@@ -94,19 +94,19 @@ namespace dht {
         }
     };
     
-    #define _DHT_EXCEPTION_CLASS(name) \
+    #define DHT_EXCEPTION_CLASS(name) \
         typedef exception_class<>  name;\
         typedef exception_classf<> name##f;
 
-    #define _DHT_EXCEPTION_SUBCLASS(name, parent) \
+    #define DHT_EXCEPTION_SUBCLASS(name, parent) \
         typedef exception_class<parent>  name;\
         typedef exception_classf<parent##f> name##f;
                 
-    _DHT_EXCEPTION_CLASS(call_error)
-    _DHT_EXCEPTION_CLASS(operation_error)
-    _DHT_EXCEPTION_CLASS(io_error)
-    _DHT_EXCEPTION_CLASS(unexpected_error)
+    DHT_EXCEPTION_CLASS(call_error)
+    DHT_EXCEPTION_CLASS(operation_error)
+    DHT_EXCEPTION_CLASS(io_error)
+    DHT_EXCEPTION_CLASS(unexpected_error)
     
 }
  
-#endif //_DHT_EXCEPTION_H_
+#endif //DHT_EXCEPTION_H_

@@ -1,5 +1,5 @@
-#ifndef _DHT_EVENT_OBSERVER_NOTIFIER_H_
-#define _DHT_EVENT_OBSERVER_NOTIFIER_H_
+#ifndef DHT_EVENT_OBSERVER_NOTIFIER_H_
+#define DHT_EVENT_OBSERVER_NOTIFIER_H_
 
 #include <map>
 #include <list>
@@ -57,4 +57,4 @@ namespace dht {
     }
 } // ns dht
 
-#endif // _DHT_EVENT_OBSERVER_NOTIFIER_H_
+#endif // DHT_EVENT_OBSERVER_NOTIFIER_H_

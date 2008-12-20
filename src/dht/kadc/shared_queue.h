@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_SHARED_QUEUE_H_
-#define _DHT_KADC_SHARED_QUEUE_H_
+#ifndef DHT_KADC_SHARED_QUEUE_H_
+#define DHT_KADC_SHARED_QUEUE_H_
 
 #include <ace/Condition_T.h>
 #include <ace/Thread_Mutex.h>
@@ -48,4 +48,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_SHARED_QUEUE_H_
+#endif //DHT_KADC_SHARED_QUEUE_H_

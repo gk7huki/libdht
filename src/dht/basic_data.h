@@ -1,5 +1,5 @@
-#ifndef _DHT_BASIC_DATA_H_
-#define _DHT_BASIC_DATA_H_
+#ifndef DHT_BASIC_DATA_H_
+#define DHT_BASIC_DATA_H_
 
 #include <ace/Log_Msg.h>
 #include <stddef.h>
@@ -134,4 +134,4 @@ namespace dht {
     } */
 
 } // ns dht
-#endif // _DHT_BASIC_DATA_H_
+#endif // DHT_BASIC_DATA_H_

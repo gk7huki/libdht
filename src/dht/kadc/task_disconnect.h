@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_TASK_DISCONNECT_H_
-#define _DHT_KADC_TASK_DISCONNECT_H_
+#ifndef DHT_KADC_TASK_DISCONNECT_H_
+#define DHT_KADC_TASK_DISCONNECT_H_
 
 #include "task.h"
 #include "client.h"
@@ -20,4 +20,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_TASK_DISCONNECT_H_
+#endif //DHT_KADC_TASK_DISCONNECT_H_

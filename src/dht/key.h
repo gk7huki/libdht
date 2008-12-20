@@ -1,5 +1,5 @@
-#ifndef _DHT_KEY_H_
-#define _DHT_KEY_H_
+#ifndef DHT_KEY_H_
+#define DHT_KEY_H_
 
 #include "store_data.h"
 

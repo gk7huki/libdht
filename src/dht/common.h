@@ -1,5 +1,5 @@
-#ifndef _DHT_COMMON_H_
-#define _DHT_COMMON_H_
+#ifndef DHT_COMMON_H_
+#define DHT_COMMON_H_
 
 #include <ace/Log_Msg.h>
 #include <ace/Addr.h>
