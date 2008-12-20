@@ -1,5 +1,5 @@
-#ifndef _DHT_STORE_DATA_H_
-#define _DHT_STORE_DATA_H_
+#ifndef DHT_STORE_DATA_H_
+#define DHT_STORE_DATA_H_
 
 #include "basic_data.h"
 

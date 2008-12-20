@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_OBSERVER_INFO_H_
-#define _DHT_KADC_OBSERVER_INFO_H_
+#ifndef DHT_KADC_OBSERVER_INFO_H_
+#define DHT_KADC_OBSERVER_INFO_H_
 
 namespace dht {
 namespace kadc {
@@ -24,4 +24,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_OBSERVER_INFO_H_
+#endif //DHT_KADC_OBSERVER_INFO_H_

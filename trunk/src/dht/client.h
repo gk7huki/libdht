@@ -1,5 +1,5 @@
-#ifndef _DHT_CLIENT_H_
-#define _DHT_CLIENT_H_
+#ifndef DHT_CLIENT_H_
+#define DHT_CLIENT_H_
 
 #include "common.h"
 #include "key.h"
@@ -365,4 +365,4 @@ namespace dht {
     };
 }
 
-#endif //_DHT_CLIENT_H_
+#endif //DHT_CLIENT_H_

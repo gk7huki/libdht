@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_STATE_CONNECTING_H_
-#define _DHT_KADC_STATE_CONNECTING_H_
+#ifndef DHT_KADC_STATE_CONNECTING_H_
+#define DHT_KADC_STATE_CONNECTING_H_
 
 #include "state.h"
 #include "observer_message.h"

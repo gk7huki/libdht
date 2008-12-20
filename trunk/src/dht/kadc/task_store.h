@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_TASK_STORE_H_
-#define _DHT_KADC_TASK_STORE_H_
+#ifndef DHT_KADC_TASK_STORE_H_
+#define DHT_KADC_TASK_STORE_H_
 
 #include <string>
 
@@ -33,4 +33,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_TASK_STORE_H_
+#endif //DHT_KADC_TASK_STORE_H_

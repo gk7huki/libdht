@@ -1,5 +1,5 @@
-#ifndef _DHT_NAME_VALUE_MAP_H_
-#define _DHT_NAME_VALUE_MAP_H_
+#ifndef DHT_NAME_VALUE_MAP_H_
+#define DHT_NAME_VALUE_MAP_H_
 
 #include <map>
 #include <string>
@@ -108,4 +108,4 @@ namespace dht {
     name_value_map::end() const { return _str_map.end(); }  
 } // namespace dht
 
-#endif //_DHT_NAME_VALUE_MAP_H_
+#endif //DHT_NAME_VALUE_MAP_H_

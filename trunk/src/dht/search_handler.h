@@ -1,5 +1,5 @@
-#ifndef _DHT_SEARCH_HANDLER_H_
-#define _DHT_SEARCH_HANDLER_H_
+#ifndef DHT_SEARCH_HANDLER_H_
+#define DHT_SEARCH_HANDLER_H_
 
 #include "notify_handler.h"
 #include "key.h"
@@ -59,4 +59,4 @@ namespace dht {
     };
 }
 
-#endif //_DHT_SEARCH_HANDLER_H_
+#endif //DHT_SEARCH_HANDLER_H_

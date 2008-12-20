@@ -1,5 +1,5 @@
-#ifndef _DHT_NOTIFY_HANDLER_H_
-#define _DHT_NOTIFY_HANDLER_H_
+#ifndef DHT_NOTIFY_HANDLER_H_
+#define DHT_NOTIFY_HANDLER_H_
 
 namespace dht {
     /**
@@ -27,4 +27,4 @@ namespace dht {
     };
 }
 
-#endif //_DHT_NOTIFY_HANDLER_H_
+#endif //DHT_NOTIFY_HANDLER_H_

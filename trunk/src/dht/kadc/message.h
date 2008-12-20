@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_MESSAGE_H_
-#define _DHT_KADC_MESSAGE_H_
+#ifndef DHT_KADC_MESSAGE_H_
+#define DHT_KADC_MESSAGE_H_
 
 #include "../notify_handler.h"
 #include "task.h"
@@ -46,4 +46,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_MESSAGE_H_
+#endif //DHT_KADC_MESSAGE_H_

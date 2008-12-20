@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_OBSERVER_MESSAGE_H_
-#define _DHT_KADC_OBSERVER_MESSAGE_H_
+#ifndef DHT_KADC_OBSERVER_MESSAGE_H_
+#define DHT_KADC_OBSERVER_MESSAGE_H_
 
 #include "client.h"
 #include "message.h"
@@ -18,4 +18,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_OBSERVER_MESSAGE_H_
+#endif //DHT_KADC_OBSERVER_MESSAGE_H_

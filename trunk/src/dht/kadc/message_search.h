@@ -1,5 +1,5 @@
-#ifndef _DHT_KADC_MESSAGE_SEARCH_H_
-#define _DHT_KADC_MESSAGE_SEARCH_H_
+#ifndef DHT_KADC_MESSAGE_SEARCH_H_
+#define DHT_KADC_MESSAGE_SEARCH_H_
 
 #include "../key.h"
 #include "../value.h"
@@ -30,4 +30,4 @@ namespace kadc {
 } // ns kadc
 } // ns dht
 
-#endif //_DHT_KADC_MESSAGE_SEARCH_H_
+#endif //DHT_KADC_MESSAGE_SEARCH_H_
