@@ -6,30 +6,48 @@ import sys
 from build_support import *
 from build_config import *
 
-opts = Options('custom.py')
-opts.Add(EnumOption('debug', 'Build with debug symbols', 'no',
-                    ['yes','no']))
-env = Environment(options = opts, tools=['mingw'])
+opts = Variables('custom.py')
+opts.Add(EnumVariable('debug', 'Build with debug symbols', 'no',
+                    allowed_values=('yes','no')))
+opts.Add(EnumVariable('win32', 'Build for win32 target', 'no',
+                    allowed_values=('yes','no')))
+env = Environment(variables = opts) # , tools=['mingw'])
 Help("\nType 'scons' to build the library\n")
 Help("\nType 'scons example' to build the examples\n")
 # Help("\nType 'scons test' to build and run the unit tests\n")
 Help(opts.GenerateHelpText(env))
 
+platform = None
+if (env.get('win32') == 'yes'):
+    env.Tool('mingw')
+    env['CC'] = 'i686-w64-mingw32-gcc'
+    env['CXX'] = 'i686-w64-mingw32-g++'
+    env['AR'] = 'i686-w64-mingw32-ar'
+    env['RANLIB'] = 'i686-w64-mingw32-ranlib'
+    env['BUILD_PLATFORM'] = 'win32'
+    platform = 'win32'
+else:
+    env.Tool('gcc')
+    env['BUILD_PLATFORM'] = sys.platform
+
 mode = "Release"
-env.Append(CPPFLAGS = flgs)
+env['BUILD_VARIANT']  = mode
+env.Append(CPPFLAGS = cflags)
+env.Append(LINKFLAGS = lflags)
 if (env.get('debug') == 'yes'):
-    print "Debug build"
+    print("Debug build")
     mode = "Debug"
     env.Append(CPPFLAGS = ['-g'])
     env.Append(CPPDEFINES = 'DEBUG')
 else:
     env.Append(CPPFLAGS = ['-O3'])
     env.Append(CPPDEFINES = 'NDEBUG')
-    
+    env.Append(LINKFLAGS = ['-s'])
+
 # Construct target directories and names. Since the
 # build specific SConscript file is one level above
 # the build dir, some trickery is required.
-platform_dir = '#' + SelectBuildDir(build_base_dir)
+platform_dir = '#' + SelectBuildDir(build_base_dir, platform)
 build_dir    = os.path.join(platform_dir, mode)
 target_dir   = build_dir
 
@@ -39,7 +57,7 @@ env.Append(LIBS=libs)
 env.Append(LIBPATH=lib_search_path)
 env.Append(CPPDEFINES=defs)
 
-env.BuildDir(build_dir, source_base_dir, duplicate=0)
+env.VariantDir(build_dir, source_base_dir, duplicate=0)
 
 # Executable building environment needs usually some more
 # specifications such as platform specific libraries.
